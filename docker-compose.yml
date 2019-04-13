@@ -61,3 +61,16 @@ services:
   #     - 8010:80
   #   stdin_open: true
   #   tty: true
+  web4:
+    build: 
+      context: ./
+      dockerfile: web.dockerfile
+    container_name: si_payment
+    links:
+      - db
+    volumes:
+      - ./../api/si_payment/:/var/www/html/
+    ports:
+      - 8010:80
+    stdin_open: true
+    tty: true
