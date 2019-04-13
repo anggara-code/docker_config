@@ -1,0 +1,63 @@
+# ./docker-compose.yml
+
+version: '2'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: db_restapi
+      MYSQL_USER: anggara
+      MYSQL_PASSWORD: 1
+    ports:
+      - "33066:3306"
+  phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: anggara
+            MYSQL_PASSWORD: 1
+            MYSQL_ROOT_PASSWORD: 1
+  web:
+    build: 
+      context: ./
+      dockerfile: web.dockerfile
+    container_name: api_gudang
+    links:
+      - db
+    volumes:
+      - ./../api/server_gudang/:/var/www/html/
+    ports:
+      - 8080:80
+    stdin_open: true
+    tty: true
+  web2:
+    build: 
+      context: ./
+      dockerfile: web.dockerfile
+    container_name: api_produksi
+    links:
+      - db
+    volumes:
+      - ./../api/server_produksi/:/var/www/html/
+    ports:
+      - 8090:80
+    stdin_open: true
+    tty: true
+  # web3:
+  #   build: 
+  #     context: ./
+  #     dockerfile: web.dockerfile
+  #   container_name: php_basic
+  #   links:
+  #     - db
+  #   volumes:
+  #     - ./api/php_basic/:/var/www/html/
+  #   ports:
+  #     - 8010:80
+  #   stdin_open: true
+  #   tty: true
